@@ -1,28 +1,29 @@
-// Example rule for work with TESLiOT sensors
+// Rule for work with TESLiOT sensors
 // generating virtual devices,
 // executing scanning-ble-for-tesliot-script,
 // parsing its output and putting it to virtual devices
-var tesliot_bin = "/usr/lib/wb-ble-tesliot/tesliot.sh";
-var sensor_array = [
-    {
-        dev_id: "tesliot_temp_hum_sensor_1",
-        title: "TESLiOT Sensor (temperature and humidity)",
-        mac: "C0:00:0D:92:9E:59"
-    },
-    {
-        dev_id: "tesliot_temp_sensor_1",
-        title: "TESLiOT Sensor (temperature)",
-        mac: "E3:28:2A:8F:52:81"
-    }
-];
+
+
+path = "/etc/wb-ble-tesliot.conf";
+
+try { //opening config file
+  var config = readConfig(path).config;
+} catch (e) {
+  log.error("readConfig error: " + e);
+  return;
+}
 
 function make_tesliot_sensor(sensor) {
-    defineVirtualDevice(sensor.dev_id, {
-        title: sensor.title,
+  	_dev_id = format(sensor.dev_id);
+  	_title = format(sensor.title);
+  	_mac = format(sensor.mac);
+  	log (_dev_id, _title, _mac);
+    defineVirtualDevice(_dev_id, {
+        title: _title,
         cells: {
             "mac": {
                 type: "text",
-                value: sensor.mac
+                value: _mac
             },
             "voltage": {
                 type: "voltage",
@@ -72,20 +73,22 @@ function make_tesliot_sensor(sensor) {
     })
 }
 
-for (i = 0; i < sensor_array.length; i++) {
-    make_tesliot_sensor(sensor_array[i]);
+
+for (i = 0; i < config.length; i++) {
+    make_tesliot_sensor(config[i]);
 }
+
 
 defineRule("tesliot_dynamic_refresh", {
     when: cron("@every 15s"),
-    then: function () {
-        runShellCommand("bash {}".format(tesliot_bin), {
+    then: function() {
+        runShellCommand("bash /mnt/data/root/tesliot.sh", {
             captureOutput: true,
-            exitCallback: function (exitCode, capturedOutput) {
+            exitCallback: function(exitCode, capturedOutput) {
                 if (exitCode != 0) return;
-                var sensorList = capturedOutput.split("\n");
+                var sensorList = capturedOutput.split("\n")
                 for (var i = 0; i < sensorList.length; ++i) {
-                    var sensorParts = sensorList[i].split("|");
+                    var sensorParts = sensorList[i].split("|")
                     for (i = 0; i < sensor_array.length; i++) {
                         if (sensorParts[0] == sensor_array[i].mac) {
                             dev_id = sensor_array[i].dev_id;
