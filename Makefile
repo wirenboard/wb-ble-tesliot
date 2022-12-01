@@ -4,9 +4,9 @@ all:
 	-@echo do nothing
 
 install:
-	install -Dm0644 tesliot.js -t $(DESTDIR)$(PREFIX)/share/wb-rules-system/rules
-	install -Dm0755 tesliot.sh -t $(DESTDIR)$(PREFIX)/lib/wb-ble-tesliot
-	install -Dm0644 wb-ble-tesliot.conf -t $(DESTDIR)$(PREFIX)/etc
+	install -Dm0644 tesliot.js $(DESTDIR)$(PREFIX)/share/wb-rules-system/rules/tesliot.js
+	install -Dm0755 tesliot.sh $(DESTDIR)$(PREFIX)/lib/wb-ble-tesliot/tesliot.sh
+	install -Dm0644 wb-ble-tesliot.conf $(DESTDIR)/etc/wb-ble-tesliot.conf
 clean:
 	-@echo "do nothing"
 
