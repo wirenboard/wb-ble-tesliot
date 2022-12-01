@@ -2,22 +2,21 @@
 // generating virtual devices,
 // executing scanning-ble-for-tesliot-script,
 // parsing its output and putting it to virtual devices
-
-
-path = "/etc/wb-ble-tesliot.conf";
+var tesliot_bin = "/usr/lib/wb-ble-tesliot/tesliot.sh";
+var conf_path = "/etc/wb-ble-tesliot.conf";
 
 try { //opening config file
-  var config = readConfig(path).config;
+    var config = readConfig(conf_path).config;
 } catch (e) {
-  log.error("readConfig error: " + e);
-  return;
+    log.error("readConfig error: " + e);
+    return;
 }
 
 function make_tesliot_sensor(sensor) {
-  	_dev_id = format(sensor.dev_id);
-  	_title = format(sensor.title);
-  	_mac = format(sensor.mac);
-  	log (_dev_id, _title, _mac);
+    _dev_id = format(sensor.dev_id);
+    _title = format(sensor.title);
+    _mac = format(sensor.mac);
+    log(_dev_id, _title, _mac);
     defineVirtualDevice(_dev_id, {
         title: _title,
         cells: {
@@ -82,7 +81,7 @@ for (i = 0; i < config.length; i++) {
 defineRule("tesliot_dynamic_refresh", {
     when: cron("@every 15s"),
     then: function() {
-        runShellCommand("bash /mnt/data/root/tesliot.sh", {
+        runShellCommand("bash {}".format(tesliot_bin), {
             captureOutput: true,
             exitCallback: function(exitCode, capturedOutput) {
                 if (exitCode != 0) return;
