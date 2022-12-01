@@ -9,4 +9,4 @@ Homepage: https://github.com/wirenboard/wb-ble-tesliot
 Package: wb-ble-tesliot
 Architecture: all
 Depends: ${misc:Depends}, wb-rules (>= 1.7), wb-utils (>= 2.1), bluez
-Description: TESLiOT BLE Sensors <==> MQTT bridge. It's designed to be used on Wiren Board family of programmable automation controllers. Based on script for wb-rules engine.
+Description: TESLiOT BLE Sensors <==> MQTT bridge for Wiren Board.
