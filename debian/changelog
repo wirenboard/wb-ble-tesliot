@@ -1,3 +1,9 @@
+wb-ble-tesliot (1.0.2) stable; urgency=medium
+
+  * Fixed misprint in default config
+
+ -- Alexander Rakhman <alexander.rakhman@wirenboard.com> Thu, 02 Dec 2022 13:41:36 +0600
+
 wb-ble-tesliot (1.0.1) stable; urgency=medium
 
   * Added README, added config, some fixes 
