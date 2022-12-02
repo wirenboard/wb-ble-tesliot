@@ -34,7 +34,7 @@ apt install wb-ble-tesliot
          "dev_id":"tesliot_1", // устройство будет доступно по топику /devices/tesliot_1
          "title":"TESLiOT Test Sensor 1", // видимое имя устройства
          "mac":"FF:FF:FF:FF:FF:FF" // mac-адрес устройства
-      };
+      },
       {
          "dev_id":"tesliot_2",
          "title":"TESLiOT Test Sensor 2",
