@@ -1,3 +1,9 @@
+wb-ble-tesliot (1.0.3) stable; urgency=critical
+
+  * Fixed js rule
+
+ -- Alexander Rakhman <alexander.rakhman@wirenboard.com>  Tue, 13 Dec 2022 18:44:05 +0400
+
 wb-ble-tesliot (1.0.2) stable; urgency=medium
 
   * Fixed misprint in default config

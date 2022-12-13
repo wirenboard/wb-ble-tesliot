@@ -88,9 +88,9 @@ defineRule("tesliot_dynamic_refresh", {
                 var sensorList = capturedOutput.split("\n")
                 for (var i = 0; i < sensorList.length; ++i) {
                     var sensorParts = sensorList[i].split("|")
-                    for (i = 0; i < sensor_array.length; i++) {
-                        if (sensorParts[0] == sensor_array[i].mac) {
-                            dev_id = sensor_array[i].dev_id;
+                    for (i = 0; i < config.length; i++) {
+                        if (sensorParts[0] == config[i].mac) {
+                            dev_id = config[i].dev_id;
                             dev[dev_id]["mac"] = sensorParts[0];
                             dev[dev_id]["voltage"] = parseFloat(sensorParts[1]) / 10;
                             dev[dev_id]["collision"] = parseInt(sensorParts[2]);
