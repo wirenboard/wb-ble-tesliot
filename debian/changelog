@@ -1,4 +1,10 @@
-wb-ble-tesliot (1.0.4) stable; urgency=medium
+wb-ble-tesliot (1.0.5) stable; urgency=medium
+
+  * Fixed stuck of hcitool
+
+ -- Alexander Rakhman <alexander.rakhman@wirenboard.com>  Tue, 23 Mar 2023 11:56:14 +0300
+ 
+ wb-ble-tesliot (1.0.4) stable; urgency=medium
 
   * Fixed errors in js rule 
 
