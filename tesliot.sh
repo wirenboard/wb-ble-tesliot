@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # timeout for scan
-timeout=$(($(date +%s) + 13))
+timeout=$(($(date +%s) + 24))
 
 halt_hcitool_lescan() {
   pkill --signal SIGINT hcitool
@@ -13,7 +13,7 @@ process_complete_packet() {
 
   ## TeslIOT packet example
   ##packet="> 04 3E 32   02 02 00 01 59 9E 92 0D 00 C0 1C 02 01 06 
-  #           18 FF FF FF 54 53 31 1F 0C 00 09 2A 9A 24 02 80 80 80 01 00 00 0D 8F 08 8B
+  #           18 FF FF FF 54 53 31 1F 0C 00 09 2A 9A 24 02 80 80 80 01 00 00 0D>
   #           A4 04 01 59 9E 92 0D 00 C0 00 A4
 
   local packet=${1//[\ |>]/}
@@ -83,14 +83,18 @@ read_blescan_packet_dump() {
 }
 
 # begin BLE scanning
-echo "killing hcitool"
-killall hcitool
-hciconfig hci0 down
-sleep 0.25
-echo "starting hcitool"
-hciconfig hci0 up
+#killall hcitool
+if [ "$(pidof hcitool)" ]; then
+  echo "WARNING: hcitool present, killing it" >&2
+  killall hcitool
+  killall hcidump
+  sleep 1
+fi
+echo "restarting hci"
+hciconfig hci0 down && hciconfig hci0 up
+sleep 0.5
 hcitool lescan --duplicates > /dev/null &
-sleep 0.05
+sleep 0.2
 echo "dumping hcitool"
 # make sure the scan started
 if [ "$(pidof hcitool)" ]; then
@@ -98,5 +102,8 @@ if [ "$(pidof hcitool)" ]; then
   hcidump --raw | read_blescan_packet_dump
 else
   echo "ERROR: it looks like hcitool lescan isn't starting up correctly" >&2
+  hciconfig hci0 down
   exit 1
 fi
+killall hcitool
+hciconfig hci0 down
