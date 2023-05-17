@@ -79,7 +79,7 @@ for (i = 0; i < config.length; i++) {
 
 
 defineRule("tesliot_dynamic_refresh", {
-    when: cron("@every 30"),
+    when: cron("@every 30s"),
     then: function() {
         runShellCommand("bash {}".format(tesliot_bin), {
             captureOutput: true,
