@@ -1,12 +1,19 @@
-wb-ble-tesliot (1.0.5) stable; urgency=medium
+wb-ble-tesliot (1.0.6) stable; urgency=medium
+
+  * .sh: migrate from hcitool to bluetoothctl (due to common hcitool i/o error)
+  * .js: fix cron notation
+
+ -- Vladimir Romanov <v.romanov@wirenboard.com>  Wed, 17 May 2023 16:22:43 +0300
+
+ wb-ble-tesliot (1.0.5) stable; urgency=medium
 
   * Fixed stuck of hcitool
 
  -- Alexander Rakhman <alexander.rakhman@wirenboard.com>  Tue, 23 Mar 2023 11:56:14 +0300
- 
+
  wb-ble-tesliot (1.0.4) stable; urgency=medium
 
-  * Fixed errors in js rule 
+  * Fixed errors in js rule
 
  -- Alexander Rakhman <alexander.rakhman@wirenboard.com>  Tue, 13 Dec 2022 19:49:14 +0400
 
@@ -24,7 +31,7 @@ wb-ble-tesliot (1.0.2) stable; urgency=medium
 
 wb-ble-tesliot (1.0.1) stable; urgency=medium
 
-  * Added README, added config, some fixes 
+  * Added README, added config, some fixes
 
  -- Alexander Rakhman <alexander.rakhman@wirenboard.com> Thu, 01 Dec 2022 18:00:00 +0600
 

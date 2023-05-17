@@ -3,16 +3,25 @@
 # timeout for scan
 timeout=$(($(date +%s) + 24))
 
-halt_hcitool_lescan() {
-  pkill --signal SIGINT hcitool
+BT_IFACE="hci0"
+
+halt_lescan() {
+  killall -9 bluetoothctl hcitool || true
+  hciconfig $BT_IFACE reset || true
+  hciconfig $BT_IFACE down || true
 }
 
-trap halt_hcitool_lescan INT
+reset_iface() {
+  hciconfig $BT_IFACE reset
+  systemctl restart bluetooth
+}
+
+trap halt_lescan INT
 
 process_complete_packet() {
 
   ## TeslIOT packet example
-  ##packet="> 04 3E 32   02 02 00 01 59 9E 92 0D 00 C0 1C 02 01 06 
+  ##packet="> 04 3E 32   02 02 00 01 59 9E 92 0D 00 C0 1C 02 01 06
   #           18 FF FF FF 54 53 31 1F 0C 00 09 2A 9A 24 02 80 80 80 01 00 00 0D>
   #           A4 04 01 59 9E 92 0D 00 C0 00 A4
 
@@ -29,10 +38,10 @@ process_complete_packet() {
 
     let "voltage = $((0x${packet:60:2}))"
     #echo "voltage: "${voltage}
-	
+
     let "collis = $((0x${packet:62:2}))"
     #echo "collision: "${collis}
-	
+
     let "accelx = $((0x${packet:64:2})) - 128"
     #echo "accelleration on axis x: "${accelx}
 
@@ -41,7 +50,7 @@ process_complete_packet() {
 
     let "accelz = $((0x${packet:68:2})) - 128"
     #echo "accelleration on axis z: "${accelz}
-	
+
     let "hall = $((0x${packet:70:2}))"
     #echo "magnet field: "${hall}
 
@@ -84,26 +93,21 @@ read_blescan_packet_dump() {
 
 # begin BLE scanning
 #killall hcitool
-if [ "$(pidof hcitool)" ]; then
-  echo "WARNING: hcitool present, killing it" >&2
-  killall hcitool
-  killall hcidump
-  sleep 1
-fi
+halt_lescan
+
 echo "restarting hci"
-hciconfig hci0 down && hciconfig hci0 up
+reset_iface
 sleep 0.5
-hcitool lescan --duplicates > /dev/null &
+bluetoothctl scan on > /dev/null &
 sleep 0.2
-echo "dumping hcitool"
+echo "dumping data"
 # make sure the scan started
-if [ "$(pidof hcitool)" ]; then
+if [ "$(pidof bluetoothctl)" ]; then
   # start the scan packet dump and process the stream
   hcidump --raw | read_blescan_packet_dump
 else
   echo "ERROR: it looks like hcitool lescan isn't starting up correctly" >&2
-  hciconfig hci0 down
+  halt_lescan
   exit 1
 fi
-killall hcitool
-hciconfig hci0 down
+halt_lescan
