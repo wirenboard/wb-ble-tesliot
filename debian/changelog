@@ -1,3 +1,9 @@
+wb-ble-tesliot (1.0.7) stable; urgency=medium
+
+  * Format source code. No functional changes
+
+ -- Nikolay Korotkiy <nikolay.korotkiy@wirenboard.com>  Fri, 09 Jun 2023 17:30:00 +0400
+
 wb-ble-tesliot (1.0.6) stable; urgency=medium
 
   * .sh: migrate from hcitool to bluetoothctl (due to common hcitool i/o error)
