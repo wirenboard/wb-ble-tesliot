@@ -1,3 +1,9 @@
+wb-ble-tesliot (1.0.8) stable; urgency=medium
+
+  * Fix temperature sign
+
+ -- Nikolay Korotkiy <nikolay.korotkiy@wirenboard.com>  Tue, 25 Jul 2023 14:20:11 +0400
+
 wb-ble-tesliot (1.0.7) stable; urgency=medium
 
   * Format source code. No functional changes
