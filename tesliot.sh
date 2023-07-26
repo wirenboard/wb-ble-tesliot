@@ -61,8 +61,11 @@ process_complete_packet() {
     #echo "humidity: "${hum}
 
     let "temp = $((0x${packet:80:2}${packet:82:2}))"
+    # Example:
+    # 0xFB82 = 0b1111 1011 1000 0010 -> 0b0000 0100 0111 1101 (1149)
+    # 1149 + 1 = 1150 -> -1150
     if ((temp & 0x8000)); then
-      temp="-$((temp & 0x7FFF))"
+      temp="-$(( (temp ^ 0xFFFF) + 1 ))"
     fi
     #echo "temperature: "${temp}
 
