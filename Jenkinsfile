@@ -1,1 +1,2 @@
-buildDebArchAll()
+buildDebArchAll defaultRunPythonChecks: true,
+                defaultRunLintian: true
