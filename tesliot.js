@@ -2,7 +2,7 @@
 // generating virtual devices,
 // executing scanning-ble-for-tesliot-script,
 // parsing its output and putting it to virtual devices
-var tesliot_bin = '/usr/lib/wb-ble-tesliot/tesliot.sh';
+var tesliot_bin = '/usr/lib/wb-ble-tesliot/tesliot.py';
 var conf_path = '/etc/wb-ble-tesliot.conf';
 
 try {
@@ -10,6 +10,10 @@ try {
   var config = readConfig(conf_path).config;
 } catch (e) {
   log.error('readConfig error: ' + e);
+  return;
+}
+
+if (config.length == 0) {
   return;
 }
 
@@ -80,7 +84,7 @@ for (i = 0; i < config.length; i++) {
 defineRule('tesliot_dynamic_refresh', {
   when: cron('@every 30s'),
   then: function () {
-    runShellCommand('bash {}'.format(tesliot_bin), {
+    runShellCommand(tesliot_bin, {
       captureOutput: true,
       exitCallback: function (exitCode, capturedOutput) {
         if (exitCode != 0) return;
