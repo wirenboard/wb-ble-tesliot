@@ -73,6 +73,8 @@ async def amain():
     btctrl.process = my_process
     await btctrl.send_scan_request()
     try:
+        # The timeout is taken from previous realization
+        # Typical sensor's send period is 10 seconds, so wait a bit more than 2 periods
         await asyncio.sleep(24)
     finally:
         await btctrl.stop_scan_request()
