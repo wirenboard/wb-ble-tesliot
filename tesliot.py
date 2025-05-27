@@ -10,7 +10,7 @@ import aioblescan as aiobs
 
 received = {}
 
-got_some_adv_reports = False
+got_some_adv_reports = False  # pylint: disable=invalid-name
 
 
 def not_duplicate(peer, payload, timestamp):
@@ -34,7 +34,7 @@ def my_process(data):
         # Similar issue https://github.com/frawau/aioblescan/issues/36
         return
     for packet in event.retrieve(aiobs.HCI_LEM_Adv_Report):
-        global got_some_adv_reports
+        global got_some_adv_reports  # pylint: disable=global-statement
         got_some_adv_reports = True
         msd_list = packet.retrieve("Manufacturer Specific Data")
         for msd in msd_list:
@@ -45,7 +45,7 @@ def my_process(data):
                 # sensor sends up to 6 duplicate packets, ignore them
                 if not_duplicate(peer, payload, timestamp):
                     print(
-                        "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{:%d-%m-%Y %H:%M:%S}".format(
+                        "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{:%d-%m-%Y %H:%M:%S}".format(  # pylint: disable=consider-using-f-string
                             peer,
                             int.from_bytes(payload[9:10], "big"),  # voltage
                             int.from_bytes(payload[10:11], "big"),  # collision flags
@@ -69,7 +69,9 @@ async def amain():
     # Create and configure a raw socket for hci0
     socket = aiobs.create_bt_socket(0)
 
-    conn, btctrl = await event_loop._create_connection_transport(socket, aiobs.BLEScanRequester, None, None)
+    conn, btctrl = await event_loop._create_connection_transport(  # pylint: disable=protected-access
+        socket, aiobs.BLEScanRequester, None, None
+    )
     btctrl.process = my_process
     await btctrl.send_scan_request()
     try:
