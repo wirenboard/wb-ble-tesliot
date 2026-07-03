@@ -1,3 +1,9 @@
+wb-ble-tesliot (1.1.4) stable; urgency=medium
+
+  * postinst: use try-restart and ignore restart failures
+
+ -- Nikolay Korotkiy <nikolay.korotkiy@wirenboard.com>  Thu, 02 Jul 2026 18:20:00 +0400
+
 wb-ble-tesliot (1.1.3) stable; urgency=medium
 
   * Enable angry pylint. No functional changes
