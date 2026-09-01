@@ -1,3 +1,12 @@
+wb-ble-tesliot (1.1.5) stable; urgency=medium
+
+  * Fix wb-rules type-checker (checkJs) findings
+  * Compare sensor MAC addresses case-insensitively
+  * Backup /etc/wb-ble-tesliot.conf
+  * Add missed dependency bluez
+
+ -- Nikolay Korotkiy <nikolay.korotkiy@wirenboard.com>  Fri, 28 Aug 2026 18:20:00 +0400
+
 wb-ble-tesliot (1.1.4) stable; urgency=medium
 
   * postinst: use try-restart and ignore restart failures
