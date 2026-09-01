@@ -5,22 +5,19 @@
 var tesliot_bin = '/usr/lib/wb-ble-tesliot/tesliot.py';
 var conf_path = '/etc/wb-ble-tesliot.conf';
 
+var config = [];
+
 try {
   //opening config file
-  var config = readConfig(conf_path).config;
+  config = readConfig(conf_path).config || [];
 } catch (e) {
   log.error('readConfig error: ' + e);
-  return;
-}
-
-if (config.length == 0) {
-  return;
 }
 
 function make_tesliot_sensor(sensor) {
-  _dev_id = format(sensor.dev_id);
-  _title = format(sensor.title);
-  _mac = format(sensor.mac);
+  var _dev_id = format(sensor.dev_id);
+  var _title = format(sensor.title);
+  var _mac = format(sensor.mac);
   log(_dev_id, _title, _mac);
   defineVirtualDevice(_dev_id, {
     title: _title,
@@ -77,39 +74,42 @@ function make_tesliot_sensor(sensor) {
   });
 }
 
-for (i = 0; i < config.length; i++) {
-  make_tesliot_sensor(config[i]);
-}
+if (config.length > 0) {
+  for (var i = 0; i < config.length; i++) {
+    config[i].mac = format(config[i].mac).toUpperCase();
+    make_tesliot_sensor(config[i]);
+  }
 
-defineRule('tesliot_dynamic_refresh', {
-  when: cron('@every 30s'),
-  then: function () {
-    runShellCommand(tesliot_bin, {
-      captureOutput: true,
-      exitCallback: function (exitCode, capturedOutput) {
-        if (exitCode != 0) return;
-        var sensorList = capturedOutput.split('\n');
-        for (i = 0; i < sensorList.length; ++i) {
-          var sensorParts = sensorList[i].split('|');
-          for (j = 0; j < config.length; j++) {
-            if (sensorParts[0] == config[j].mac) {
-              dev_id = config[j].dev_id;
-              dev[dev_id]['mac'] = sensorParts[0];
-              dev[dev_id]['voltage'] = parseFloat(sensorParts[1]) / 10;
-              dev[dev_id]['collision'] = parseInt(sensorParts[2]);
-              dev[dev_id]['acceleration_x'] = parseFloat(sensorParts[3]) / 100;
-              dev[dev_id]['acceleration_y'] = parseFloat(sensorParts[4]) / 100;
-              dev[dev_id]['acceleration_z'] = parseFloat(sensorParts[5]) / 100;
-              dev[dev_id]['magnet_field'] = parseInt(sensorParts[6]);
-              dev[dev_id]['luminocity'] = parseInt(sensorParts[7]);
-              dev[dev_id]['humidity'] = parseFloat(sensorParts[8]) / 100;
-              dev[dev_id]['temperature'] = parseFloat(sensorParts[9]) / 100;
-              dev[dev_id]['rssi'] = sensorParts[10];
-              dev[dev_id]['timestamp'] = sensorParts[11];
+  defineRule('tesliot_dynamic_refresh', {
+    when: cron('@every 30s'),
+    then: function () {
+      runShellCommand(tesliot_bin, {
+        captureOutput: true,
+        exitCallback: function (exitCode, capturedOutput) {
+          if (exitCode != 0) return;
+          var sensorList = capturedOutput.split('\n');
+          for (var i = 0; i < sensorList.length; ++i) {
+            var sensorParts = sensorList[i].split('|');
+            for (var j = 0; j < config.length; j++) {
+              if (sensorParts[0] == config[j].mac) {
+                var dev_id = config[j].dev_id;
+                dev[dev_id]['mac'] = sensorParts[0];
+                dev[dev_id]['voltage'] = parseFloat(sensorParts[1]) / 10;
+                dev[dev_id]['collision'] = parseInt(sensorParts[2]);
+                dev[dev_id]['acceleration_x'] = parseFloat(sensorParts[3]) / 100;
+                dev[dev_id]['acceleration_y'] = parseFloat(sensorParts[4]) / 100;
+                dev[dev_id]['acceleration_z'] = parseFloat(sensorParts[5]) / 100;
+                dev[dev_id]['magnet_field'] = parseInt(sensorParts[6]);
+                dev[dev_id]['luminocity'] = parseInt(sensorParts[7]);
+                dev[dev_id]['humidity'] = parseFloat(sensorParts[8]) / 100;
+                dev[dev_id]['temperature'] = parseFloat(sensorParts[9]) / 100;
+                dev[dev_id]['rssi'] = sensorParts[10];
+                dev[dev_id]['timestamp'] = sensorParts[11];
+              }
             }
           }
-        }
-      },
-    });
-  },
-});
+        },
+      });
+    },
+  });
+}

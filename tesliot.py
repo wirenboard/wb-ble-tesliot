@@ -75,7 +75,7 @@ async def amain():
     btctrl.process = my_process
     await btctrl.send_scan_request()
     try:
-        # The timeout is taken from previous realization
+        # The timeout is taken from the previous implementation
         # Typical sensor's send period is 10 seconds, so wait a bit more than 2 periods
         await asyncio.sleep(24)
     finally:
@@ -87,7 +87,7 @@ def main():
     try:
         asyncio.run(amain())
         if not got_some_adv_reports:
-            # it can be a hci hung up, so power down/up the device
+            # hci0 may have hung, so power the device down and up
             print("[tesliot.py] No advertising packets. Restart hci0", file=sys.stderr)
             subprocess.run(["btmgmt", "power", "off"], check=False)
             subprocess.run(["btmgmt", "power", "on"], check=False)
